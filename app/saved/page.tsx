@@ -19,15 +19,6 @@ export default function SavedJobsPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* <div className="flex items-center gap-4">
-        <Link href="/">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Jobs
-          </Button>
-        </Link>
-        <h1 className="text-2xl font-bold">Saved Jobs</h1>
-      </div> */}
       <div className="relative flex items-center">
         <Link href="/">
           <Button variant="outline" size="sm" className="w-fit">

@@ -1,51 +1,40 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { Job, JobFilters, JobType, ExperienceLevel } from '@/types/job';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { JobFilters } from "@/types/job";
 
 interface JobsStore {
-  // Filters
   filters: JobFilters;
   setFilters: (filters: Partial<JobFilters>) => void;
   resetFilters: () => void;
-  
-  // Saved jobs
+
   savedJobs: string[];
   saveJob: (jobId: string) => void;
   unsaveJob: (jobId: string) => void;
   isJobSaved: (jobId: string) => boolean;
-  
-  // UI State
-  viewMode: 'grid' | 'list';
-  setViewMode: (mode: 'grid' | 'list') => void;
-  
-  // Sort
-  sortBy: 'date' | 'company' | 'relevance';
-  setSortBy: (sort: 'date' | 'company' | 'relevance') => void;
+
+  viewMode: "grid" | "list";
+  setViewMode: (mode: "grid" | "list") => void;
+
+  sortBy: "date" | "company" | "relevance";
+  setSortBy: (sort: "date" | "company" | "relevance") => void;
 }
 
 const defaultFilters: JobFilters = {
   jobTypes: [],
   experienceLevel: null,
   remote: null,
-  location: '',
-  search: '',
+  location: "",
+  search: "",
 };
 
 export const useJobsStore = create<JobsStore>()(
   persist(
     (set, get) => ({
-      // Filters
-      filters: { ...defaultFilters }, // always create fresh copy
+      filters: { ...defaultFilters },
       setFilters: (newFilters) =>
-        set((state) => ({
-          filters: { ...state.filters, ...newFilters },
-        })),
-      resetFilters: () =>
-        set({
-          filters: { ...defaultFilters }, // clone instead of reusing reference
-        }),
+        set((state) => ({ filters: { ...state.filters, ...newFilters } })),
+      resetFilters: () => set({ filters: { ...defaultFilters } }),
 
-      // Saved jobs
       savedJobs: [],
       saveJob: (jobId) =>
         set((state) => ({
@@ -59,16 +48,14 @@ export const useJobsStore = create<JobsStore>()(
         })),
       isJobSaved: (jobId) => get().savedJobs.includes(jobId),
 
-      // UI State
-      viewMode: 'grid',
+      viewMode: "grid",
       setViewMode: (mode) => set({ viewMode: mode }),
 
-      // Sort
-      sortBy: 'date',
+      sortBy: "date",
       setSortBy: (sort) => set({ sortBy: sort }),
     }),
     {
-      name: 'Jack Careers-storage',
+      name: "JackCareers-storage",
       partialize: (state) => ({
         savedJobs: state.savedJobs,
         viewMode: state.viewMode,

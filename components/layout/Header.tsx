@@ -12,13 +12,20 @@ import clsx from "clsx";
 export function Header() {
   const { filters, setFilters, viewMode, setViewMode, savedJobs } =
     useJobsStore();
-  const [searchInput, setSearchInput] = useState(filters.search);
+  const [searchInput, setSearchInput] = useState(filters.search || "");
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
+  // clear search input
   const handleClearSearch = () => {
     setSearchInput("");
-    setFilters({ search: "" });
+    setFilters({ search: "" }); // only reset search
     setShowMobileSearch(false);
+  };
+
+  // update search filter
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    setFilters({ search: value }); // only update search
   };
 
   return (
@@ -34,7 +41,6 @@ export function Header() {
               height={40}
               className="h-10 w-10"
             />
-            {/* Always visible now (removed hidden) */}
             <span className="text-lg sm:text-xl font-bold text-primary">
               Jack Careers
             </span>
@@ -45,12 +51,9 @@ export function Header() {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search jobs, companies, skills..."
+                placeholder="Search jobs, companies, or skills..."
                 value={searchInput}
-                onChange={(e) => {
-                  setSearchInput(e.target.value);
-                  setFilters({ search: e.target.value });
-                }}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10 pr-10"
               />
               {searchInput && (
@@ -72,11 +75,7 @@ export function Header() {
               onClick={() => setShowMobileSearch(!showMobileSearch)}
               className="sm:hidden p-2 rounded-md hover:bg-accent"
             >
-              {showMobileSearch ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Search className="h-5 w-5" />
-              )}
+              {showMobileSearch ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
             </button>
 
             {/* Grid / List Toggle */}
@@ -114,7 +113,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Search - Mobile (inline in header with margin-bottom) */}
+        {/* Search - Mobile */}
         <div
           className={clsx(
             "sm:hidden transition-all duration-300 overflow-hidden",
@@ -124,12 +123,9 @@ export function Header() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search jobs..."
+              placeholder="Search jobs, companies, or skills..."
               value={searchInput}
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-                setFilters({ search: e.target.value });
-              }}
+              onChange={(e) => handleSearchChange(e.target.value)}
               autoFocus={showMobileSearch}
               className="pl-10 pr-10"
             />

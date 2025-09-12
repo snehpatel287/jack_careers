@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import { JobCard } from './JobCard';
-import { JobCardSkeleton } from './JobCardSkeleton';
-import { useJobsStore } from '@/store/jobs-store';
-import { jobsApi } from '@/lib/api';
-import { cn } from '@/lib/utils';
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { JobCard } from "./JobCard";
+import { JobCardSkeleton } from "./JobCardSkeleton";
+import { useJobsStore } from "@/store/jobs-store";
+import { jobsApi } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
 export function JobsList() {
   const { filters, viewMode, sortBy, setSortBy } = useJobsStore();
@@ -25,9 +31,10 @@ export function JobsList() {
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['jobs', filters, sortBy],
+    queryKey: ["jobs", filters, sortBy],
     queryFn: ({ pageParam = 1 }) => jobsApi.getJobs(filters, pageParam),
-    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.page + 1 : undefined,
     initialPageParam: 1,
   });
 
@@ -55,16 +62,18 @@ export function JobsList() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="h-6 w-48 bg-muted animate-pulse rounded" />
           <div className="h-10 w-48 bg-muted animate-pulse rounded" />
-        </div>
-        <div className={cn(
-          "grid gap-6",
-          viewMode === 'grid' 
-            ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" 
-            : "grid-cols-1"
-        )}>
+        </div> */}
+        <div
+          className={cn(
+            "grid gap-6",
+            viewMode === "grid"
+              ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+              : "grid-cols-1"
+          )}
+        >
           {Array.from({ length: 9 }).map((_, i) => (
             <JobCardSkeleton key={i} variant={viewMode} />
           ))}
@@ -80,7 +89,7 @@ export function JobsList() {
         <div className="text-center">
           <h3 className="text-lg font-semibold">Something went wrong</h3>
           <p className="text-muted-foreground">
-            {error instanceof Error ? error.message : 'Failed to load jobs'}
+            {error instanceof Error ? error.message : "Failed to load jobs"}
           </p>
         </div>
         <Button onClick={() => refetch()}>Try Again</Button>
@@ -121,12 +130,14 @@ export function JobsList() {
         </Select>
       </div> */}
 
-      <div className={cn(
-        "grid gap-6",
-        viewMode === 'grid' 
-          ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" 
-          : "grid-cols-1"
-      )}>
+      <div
+        className={cn(
+          "grid gap-6",
+          viewMode === "grid"
+            ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+            : "grid-cols-1"
+        )}
+      >
         {allJobs.map((job) => (
           <JobCard key={job.id} job={job} variant={viewMode} />
         ))}
