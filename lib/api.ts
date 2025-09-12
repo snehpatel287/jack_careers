@@ -163,7 +163,6 @@ export const jobsApi = {
   },
 
   getJob: async (id: string): Promise<Job | null> => {
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 400));
     
     return mockJobs.find(job => job.id === id) || null;

@@ -147,7 +147,7 @@ export function JobCard({ job, variant = 'grid' }: JobCardProps) {
           variant="ghost"
           size="sm"
           onClick={toggleSave}
-          className="opacity-0 group-hover:opacity-100 transition-opacity"
+          className=" opacity-100 transition-opacity"
         >
           <Heart className={cn("h-4 w-4", saved && "fill-red-500 text-red-500")} />
         </Button>

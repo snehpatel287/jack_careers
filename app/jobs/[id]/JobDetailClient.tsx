@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   MapPin,
   ExternalLink,
@@ -17,18 +17,22 @@ import {
   Briefcase,
   Award,
   Globe,
-} from 'lucide-react';
-import Link from 'next/link';
-import { jobsApi } from '@/lib/api';
-import { useJobsStore } from '@/store/jobs-store';
-import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+} from "lucide-react";
+import Link from "next/link";
+import { jobsApi } from "@/lib/api";
+import { useJobsStore } from "@/store/jobs-store";
+import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 export default function JobDetailClient({ jobId }: { jobId: string }) {
   const { saveJob, unsaveJob, isJobSaved } = useJobsStore();
 
-  const { data: job, isLoading, isError } = useQuery({
-    queryKey: ['job', jobId],
+  const {
+    data: job,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["job", jobId],
     queryFn: () => jobsApi.getJob(jobId),
     enabled: !!jobId,
   });
@@ -48,7 +52,7 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
     try {
       return formatDistanceToNow(new Date(date), { addSuffix: true });
     } catch {
-      return 'Recently posted';
+      return "Recently posted";
     }
   };
 
@@ -80,16 +84,18 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
+    <div className="max-w-4xl mx-auto space-y-4">
+      <div className="relative flex items-center">
         <Link href="/">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Jobs
+          <Button variant="outline" size="sm" className="w-fit">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden xs:inline">Back to Jobs</span>
+            <span className="xs:hidden">Back</span>
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold">Job Details</h1>
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-xl sm:text-2xl font-bold">
+          Job Details
+        </h1>
       </div>
 
       {/* Job Card */}
@@ -103,15 +109,20 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
                 className="h-16 w-16 rounded-lg object-cover"
               />
               <div>
-                <h1 className="text-3xl font-bold">{job.title}</h1>
+                <h1 className="text-2xl font-bold">{job.title}</h1>
                 <p className="text-xl text-muted-foreground font-medium">
                   {job.company.name}
                 </p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={toggleSave}>
-              <Heart className={cn("h-4 w-4 mr-2", saved && "fill-red-500 text-red-500")} />
-              {saved ? 'Saved' : 'Save Job'}
+              <Heart
+                className={cn(
+                  "h-4 w-4 mr-0",
+                  saved && "fill-red-500 text-red-500"
+                )}
+              />
+              {/* {saved ? 'Saved' : 'Save Job'} */}
             </Button>
           </div>
         </CardHeader>
@@ -132,8 +143,9 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
           {/* Salary */}
           {job.salary && (
             <div className="flex items-center gap-2 text-green-600 font-semibold">
-              <DollarSign className="h-4 w-4" />
-              ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
+              <DollarSign className="h-4 w-4" />$
+              {job.salary.min.toLocaleString()} - $
+              {job.salary.max.toLocaleString()}
             </div>
           )}
 
@@ -154,7 +166,9 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
             <h3 className="font-semibold mb-2">Required Skills</h3>
             <div className="flex flex-wrap gap-2">
               {job.skills.map((skill) => (
-                <Badge key={skill} variant="secondary">{skill}</Badge>
+                <Badge key={skill} variant="secondary">
+                  {skill}
+                </Badge>
               ))}
             </div>
           </div>
@@ -170,13 +184,25 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
 
           {/* Company Links */}
           <div className="flex gap-4 pt-4">
-            <a href={job.company.website} target="_blank" className="flex items-center gap-1 text-blue-600">
+            <a
+              href={job.company.website}
+              target="_blank"
+              className="flex items-center gap-1 text-blue-600"
+            >
               <Globe className="h-4 w-4" /> Website
             </a>
-            <a href={job.company.linkedin} target="_blank" className="flex items-center gap-1 text-blue-600">
+            <a
+              href={job.company.linkedin}
+              target="_blank"
+              className="flex items-center gap-1 text-blue-600"
+            >
               <Linkedin className="h-4 w-4" /> LinkedIn
             </a>
-            <a href={job.company.twitter} target="_blank" className="flex items-center gap-1 text-blue-600">
+            <a
+              href={job.company.twitter}
+              target="_blank"
+              className="flex items-center gap-1 text-blue-600"
+            >
               <Twitter className="h-4 w-4" /> Twitter
             </a>
           </div>

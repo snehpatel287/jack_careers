@@ -5,8 +5,7 @@ export default function HomePage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <aside className="lg:col-span-1">
-        <div className="sticky top-24"> 
-          {/* 👆 adjust `top-24` depending on your header height */}
+        <div className="sticky top-21"> 
           <JobFilters />
         </div>
       </aside>

@@ -1,25 +1,60 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { X, Filter } from 'lucide-react';
-import { useJobsStore } from '@/store/jobs-store';
-import { JobType, ExperienceLevel } from '@/types/job';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { X, Filter } from "lucide-react";
+import { useJobsStore } from "@/store/jobs-store";
+import { JobType, ExperienceLevel } from "@/types/job";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
-const jobTypes: JobType[] = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'];
-const experienceLevels: ExperienceLevel[] = ['Entry', 'Mid', 'Senior', 'Lead', 'Executive'];
+// Job & Experience data
+const jobTypes: JobType[] = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+  "Internship",
+  "Freelance",
+];
+const experienceLevels: ExperienceLevel[] = [
+  "Entry",
+  "Mid",
+  "Senior",
+  "Lead",
+  "Executive",
+];
 
 export function JobFilters() {
   const { filters, setFilters, resetFilters } = useJobsStore();
+  const [locationInput, setLocationInput] = useState(filters.location);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Sync locationInput with store after debounce
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFilters({ location: locationInput });
+    }, 200);
+    return () => clearTimeout(timeout);
+  }, [locationInput, setFilters]);
+
+  // Job Type change
   const handleJobTypeChange = (jobType: JobType, checked: boolean) => {
     const newJobTypes = checked
       ? [...filters.jobTypes, jobType]
@@ -27,44 +62,65 @@ export function JobFilters() {
     setFilters({ jobTypes: newJobTypes });
   };
 
+  // Remote change
   const handleRemoteChange = (value: string) => {
-    setFilters({ remote: value === 'all' ? null : value === 'true' });
+    setFilters({ remote: value === "all" ? null : value === "true" });
   };
 
+  // Experience change
   const handleExperienceLevelChange = (value: string) => {
-    setFilters({ experienceLevel: value === 'all' ? null : value as ExperienceLevel });
+    setFilters({
+      experienceLevel: value === "all" ? null : (value as ExperienceLevel),
+    });
   };
 
-  const clearFilter = (filterKey: keyof typeof filters) => {
-    if (filterKey === 'jobTypes') {
-      setFilters({ jobTypes: [] });
-    } else if (filterKey === 'experienceLevel') {
-      setFilters({ experienceLevel: null });
-    } else if (filterKey === 'remote') {
-      setFilters({ remote: null });
-    } else if (filterKey === 'location') {
-      setFilters({ location: '' });
+  // Clear individual filters
+  const clearFilter = (filterKey: keyof typeof filters, value?: string) => {
+    switch (filterKey) {
+      case "jobTypes":
+        if (value) {
+          // remove single type
+          setFilters({
+            jobTypes: filters.jobTypes.filter((t) => t !== value),
+          });
+        } else {
+          // remove all types
+          setFilters({ jobTypes: [] });
+        }
+        break;
+      case "experienceLevel":
+        setFilters({ experienceLevel: null });
+        break;
+      case "remote":
+        setFilters({ remote: null });
+        break;
+      case "location":
+        setLocationInput("");
+        setFilters({ location: "" });
+        break;
     }
   };
 
-  const hasActiveFilters = 
+  const hasActiveFilters =
     filters.jobTypes.length > 0 ||
     filters.experienceLevel !== null ||
     filters.remote !== null ||
-    filters.location !== '';
+    filters.location !== "";
 
   const FilterContent = () => (
     <div className="space-y-6">
+      {/* Location */}
       <div>
         <Label className="text-base font-semibold">Location</Label>
         <Input
           placeholder="City, State, Country..."
-          value={filters.location}
-          onChange={(e) => setFilters({ location: e.target.value })}
+          value={locationInput}
+          onChange={(e) => setLocationInput(e.target.value)}
           className="mt-2"
         />
       </div>
 
+      {/* Job Type */}
       <div>
         <Label className="text-base font-semibold">Job Type</Label>
         <div className="mt-2 space-y-2">
@@ -73,7 +129,9 @@ export function JobFilters() {
               <Checkbox
                 id={jobType}
                 checked={filters.jobTypes.includes(jobType)}
-                onCheckedChange={(checked) => handleJobTypeChange(jobType, !!checked)}
+                onCheckedChange={(checked) =>
+                  handleJobTypeChange(jobType, !!checked)
+                }
               />
               <Label htmlFor={jobType}>{jobType}</Label>
             </div>
@@ -81,10 +139,11 @@ export function JobFilters() {
         </div>
       </div>
 
+      {/* Experience Level */}
       <div>
         <Label className="text-base font-semibold">Experience Level</Label>
         <Select
-          value={filters.experienceLevel || 'all'}
+          value={filters.experienceLevel || "all"}
           onValueChange={handleExperienceLevelChange}
         >
           <SelectTrigger className="mt-2">
@@ -101,10 +160,11 @@ export function JobFilters() {
         </Select>
       </div>
 
+      {/* Remote */}
       <div>
         <Label className="text-base font-semibold">Remote Work</Label>
         <Select
-          value={filters.remote === null ? 'all' : filters.remote.toString()}
+          value={filters.remote === null ? "all" : filters.remote.toString()}
           onValueChange={handleRemoteChange}
         >
           <SelectTrigger className="mt-2">
@@ -118,12 +178,9 @@ export function JobFilters() {
         </Select>
       </div>
 
+      {/* Clear All */}
       {hasActiveFilters && (
-        <Button
-          variant="outline"
-          onClick={resetFilters}
-          className="w-full"
-        >
+        <Button variant="outline" onClick={resetFilters} className="w-full">
           Clear All Filters
         </Button>
       )}
@@ -149,7 +206,7 @@ export function JobFilters() {
       <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full mb-4">
+            <Button variant="outline" className="w-full">
               <Filter className="h-4 w-4 mr-2" />
               Filters
               {hasActiveFilters && (
@@ -171,7 +228,7 @@ export function JobFilters() {
 
         {/* Active Filters Display */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mt-2">
             {filters.jobTypes.map((type) => (
               <Badge key={type} variant="secondary" className="gap-1">
                 {type}
@@ -179,7 +236,7 @@ export function JobFilters() {
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 hover:bg-transparent"
-                  onClick={() => clearFilter('jobTypes')}
+                  onClick={() => clearFilter("jobTypes", type)}
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -192,7 +249,7 @@ export function JobFilters() {
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 hover:bg-transparent"
-                  onClick={() => clearFilter('experienceLevel')}
+                  onClick={() => clearFilter("experienceLevel")}
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -200,12 +257,12 @@ export function JobFilters() {
             )}
             {filters.remote !== null && (
               <Badge variant="secondary" className="gap-1">
-                {filters.remote ? 'Remote' : 'On-site'}
+                {filters.remote ? "Remote" : "On-site"}
                 <Button
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 hover:bg-transparent"
-                  onClick={() => clearFilter('remote')}
+                  onClick={() => clearFilter("remote")}
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -218,7 +275,7 @@ export function JobFilters() {
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 hover:bg-transparent"
-                  onClick={() => clearFilter('location')}
+                  onClick={() => clearFilter("location")}
                 >
                   <X className="h-3 w-3" />
                 </Button>

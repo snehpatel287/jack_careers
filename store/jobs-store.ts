@@ -35,19 +35,22 @@ export const useJobsStore = create<JobsStore>()(
   persist(
     (set, get) => ({
       // Filters
-      filters: defaultFilters,
+      filters: { ...defaultFilters }, // always create fresh copy
       setFilters: (newFilters) =>
         set((state) => ({
           filters: { ...state.filters, ...newFilters },
         })),
-      resetFilters: () => set({ filters: defaultFilters }),
+      resetFilters: () =>
+        set({
+          filters: { ...defaultFilters }, // clone instead of reusing reference
+        }),
 
       // Saved jobs
       savedJobs: [],
       saveJob: (jobId) =>
         set((state) => ({
-          savedJobs: state.savedJobs.includes(jobId) 
-            ? state.savedJobs 
+          savedJobs: state.savedJobs.includes(jobId)
+            ? state.savedJobs
             : [...state.savedJobs, jobId],
         })),
       unsaveJob: (jobId) =>
