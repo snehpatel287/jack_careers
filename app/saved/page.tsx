@@ -20,7 +20,7 @@ export default function SavedJobsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="relative flex items-center">
-        <Link href="/">
+        <Link href="/main">
           <Button variant="outline" size="sm" className="w-fit">
             <ArrowLeft className="h-4 w-4" />
             <span className="hidden xs:inline">Back to Jobs</span>
@@ -41,7 +41,7 @@ export default function SavedJobsPage() {
               Start browsing jobs and save the ones you are interested in
             </p>
           </div>
-          <Link href="/">
+          <Link href="/main">
             <Button>Browse Jobs</Button>
           </Link>
         </div>

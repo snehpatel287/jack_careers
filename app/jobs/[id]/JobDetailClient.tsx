@@ -86,7 +86,7 @@ export default function JobDetailClient({ jobId }: { jobId: string }) {
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       <div className="relative flex items-center">
-        <Link href="/">
+        <Link href="/main">
           <Button variant="outline" size="sm" className="w-fit">
             <ArrowLeft className="h-4 w-4" />
             <span className="hidden xs:inline">Back to Jobs</span>
