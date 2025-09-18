@@ -13,7 +13,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/main`, // Use window.location.origin instead
+        redirectTo: `${window.location.origin}/main`,
       },
     });
     if (error) {
@@ -63,7 +63,7 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="group relative w-full flex items-center justify-center px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl text-gray-700 font-semibold text-base sm:text-lg transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+              className="group relative w-full flex items-center justify-center px-2 py-4 bg-white border-2 border-gray-200 rounded-2xl text-gray-700 font-semibold text-base sm:text-lg transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-3">
@@ -71,7 +71,7 @@ export default function LoginPage() {
                   <span>Signing in...</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <svg
                     className="w-6 h-6 transition-transform duration-300 group-hover:scale-110"
                     viewBox="0 0 24 24"
