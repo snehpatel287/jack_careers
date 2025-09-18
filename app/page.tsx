@@ -7,13 +7,13 @@ import { useState } from "react";
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-
+  // In your login page, make sure the redirect URL is correct
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/main`, 
+        redirectTo: `${window.location.origin}/main`, // Use window.location.origin instead
       },
     });
     if (error) {
@@ -59,31 +59,21 @@ export default function LoginPage() {
               Access your personalized career dashboard
             </p>
           </div>
-          <div className="animate-slide-up animation-delay-600 w-full max-w-sm mx-auto px-2">
+          <div className="animate-slide-up animation-delay-600">
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="group relative w-full flex items-center justify-center 
-               px-3 py-2 sm:px-5 sm:py-3 md:px-6 md:py-4
-               bg-white border-2 border-gray-200 rounded-lg sm:rounded-xl md:rounded-2xl
-               text-xs sm:text-sm md:text-base lg:text-lg
-               font-semibold text-gray-700 
-               transition-all duration-300 
-               hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 
-               disabled:opacity-70 disabled:cursor-not-allowed 
-               transform hover:scale-105 active:scale-95"
+              className="group relative w-full flex items-center justify-center px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl text-gray-700 font-semibold text-base sm:text-lg transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
               {isLoading ? (
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                  <span className="text-xs sm:text-sm md:text-base">
-                    Signing in...
-                  </span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                  <span>Signing in...</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="flex items-center space-x-3">
                   <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110"
+                    className="w-6 h-6 transition-transform duration-300 group-hover:scale-110"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -103,14 +93,14 @@ export default function LoginPage() {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                  <span className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent text-xs sm:text-sm md:text-base">
+                  <span className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
                     Continue with Google
                   </span>
                 </div>
               )}
 
               {/* Hover effect overlay */}
-              <div className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
 
